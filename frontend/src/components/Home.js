@@ -1,10 +1,9 @@
 import {useEffect} from "react"
 import { useNavigate } from "react-router-dom";
 function Home() {
-
+    const navigate = useNavigate()
     useEffect(() => {
-        const navigate = useNavigate()
-
+        
         //navigate to login page if there is no token in localstorage
         if (!localStorage.getItem('token')) {
             navigate('/login');
