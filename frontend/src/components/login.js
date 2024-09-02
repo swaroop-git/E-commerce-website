@@ -20,7 +20,7 @@ function Login() {
         axios.post('https://reqres.in/api/login', data)
             .then((res) => {
                 console.log(res, 17)
-                if(res.data.token){
+                if (res.data.token) {
                     localStorage.setItem('token', res.data.token);
                     navigate('/home')
                 }

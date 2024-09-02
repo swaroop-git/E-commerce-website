@@ -20,6 +20,8 @@ function App() {
 //   })
 // },[])
 
+// what is state , props and reconsolation in react, state management ?
+
   return (
     <BrowserRouter>
     <Routes>
