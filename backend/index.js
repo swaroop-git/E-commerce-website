@@ -37,7 +37,8 @@ app.get('/products',(req,res)=>{
     res.send({ code: 200 , message: 'Fetch products success.', data : data});
 })
 
-app.post('/add-product', productcontroller.addProduct)
+app.post('/add-product', productcontroller.addProduct);
+app.get('/get-products', productcontroller.getProducts);
 
 app.listen(port,() => {
     console.log(`I am listening on port ${port}`);
