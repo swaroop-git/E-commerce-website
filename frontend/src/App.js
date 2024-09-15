@@ -1,32 +1,19 @@
 import './App.css';
-import {BrowserRouter , Routes , Route } from "react-router-dom";
+import {BrowserRouter, Routes , Route } from "react-router-dom";
 import Login from "./components/login"
 import Home from './components/Home';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import Addproduct from './components/AddProduct';
+import GetProducts from "./components/GetProducts";
 
 function App() {
-
-// const [product, setProduct] = useState([])
-
-// useEffect(()=> {
-//   axios.get('http://localhost:3001/products')
-//   .then(res => {
-//     console.log(res.data.data)
-//     setProduct(res.data.data);
-//   })
-//   .catch(err => {
-//     console.log(err);
-//   })
-// },[])
-
-// what is state , props and reconsolation in react, state management ?
 
   return (
     <BrowserRouter>
     <Routes>
       <Route path='/login' element={<Login/>} />
       <Route path='/home' element={<Home/>} />
+      <Route path= '/add/product' element={<Addproduct/>} />
+      <Route path= '/get/products' element={<GetProducts/>} />
     </Routes>
     </BrowserRouter>
   );

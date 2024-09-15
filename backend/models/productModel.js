@@ -2,6 +2,7 @@ const { default: mongoose } = require("mongoose");
 
 const { Schema } = mongoose;
 
+// products schema
 const productSchema = new Schema({
     url : { type : String },
     name : String,

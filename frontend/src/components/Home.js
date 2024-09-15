@@ -1,38 +1,21 @@
+import axios from "axios";
 import {useEffect, useState} from "react"
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 function Home() {
     const navigate = useNavigate()
-    const [data, setProduct] = useState([]
-        // [
-        //     {
-        //         url: 'https://fastly.picsum.photos/id/0/5000/3333.jpg?hmac=_j6ghY5fCfSD6tvtcV74zXivkJSPIfR9B8w34XeQmvU',
-        //         name: 'macbook pro 2',
-        //         category: 'Laptop',
-        //         price: 1003,
-        //         seller: 'Apple'
-        //     },
-        //     {
-        //         url: 'https://fastly.picsum.photos/id/91/3504/2336.jpg?hmac=tK6z7RReLgUlCuf4flDKeg57o6CUAbgklgLsGL0UowU',
-        //         name: 'asq12',
-        //         category: 'Camera',
-        //         price: '1lac',
-        //         seller: 'Sony'
-        //     },
-        //     {
-        //         url: 'https://fastly.picsum.photos/id/160/3200/2119.jpg?hmac=cz68HnnDt3XttIwIFu5ymcvkCp-YbkEBAM-Zgq-4DHE',
-        //         name: '13 mini',
-        //         category: 'Mobile',
-        //         price: '50k',
-        //         seller: 'Apple'
-        //     }
-        // ]
-    )
+    const [data, setProduct] = useState([]);
 
 
     useEffect(() => {
+        
+        //navigate to login page if there is no token in localstorage
+        if (!localStorage.getItem('token')) {
+            navigate('/login');
+            return;
+        }
+        
         //fetching data from backend 
-        axios.get('http://localhost:3001/products')
+        axios.get('http://localhost:3001/get-products')
             .then(res => {
                 // console.log(res.data.data)
                 setProduct(res.data.data);
@@ -41,37 +24,39 @@ function Home() {
                 console.log(err);
             })
 
-        //navigate to login page if there is no token in localstorage
-        if (!localStorage.getItem('token')) {
-            navigate('/login');
-        }
-    }, [])
+        // //navigate to login page if there is no token in localstorage
+        // if (!localStorage.getItem('token')) {
+        //     navigate('/login');
+        // }
+    })
 
     return (
         //on clicking logout button clearing out the token from localstorage and navigating to login page
         <div>
             Home page
             <button onClick= {()=> {
-                localStorage.clear()
-                navigate('/login') 
+                localStorage.clear();
+                navigate('/login');
             }}> Logout </button>  
 
 
             <h1>PRODUCT LIST</h1>
 
-            <div style= {{ display: 'flex', flexwrap: 'wrap' }}>
+            <div style= {{ display: 'flex', flexwrap: 'wrap', justifyContent:'space-between' }}>
 
                 {/* Note:- if we need to write any JS code in JSX we need to write inside {} */}
                 {data.map((item, index) => {
                     return (<div style={{
                         margin: '50px 30px',
                         background: '#eee',
-                        width: '27%'
+                        flex: '1 1 calc(33% - 20px)', // Adjust width of each item
+                        boxSizing: 'border-box'
                     }}>
                         <img style={{
                             width: '100%',
-                            height: '300px'
-                        }} src={item.url} />
+                            height: 'auto', // Maintain aspect ratio
+                            display: 'block'
+                        }} src={item.url} alt={item.name}/>
                         <p>{item.name} in {item.category}</p>
                         <p>By {item.seller}</p>
                         <p> PRICE : {item.price} only/-</p>
@@ -81,7 +66,7 @@ function Home() {
 
         </div>
 
-    )
+    );
 }
 
 export default Home;
