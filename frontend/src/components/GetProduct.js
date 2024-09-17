@@ -36,7 +36,7 @@ function GetProduct(params) {
             .then(res=>{
             console.log(res, "35");
             if(res.data.code == 200){
-                navigate('/get/products');
+                navigate('/get/products')
             }
             })
         } catch (error) {
