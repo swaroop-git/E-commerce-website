@@ -1,8 +1,10 @@
 import axios from "axios";
 import {useEffect, useState} from "react";
+import { useNavigate } from "react-router-dom";
 
 function GetProducts() {
 
+    const navigate = useNavigate()
     const [data, setData] = useState([]);
     console.log(data, "8");
 
@@ -34,6 +36,10 @@ function GetProducts() {
                         <p>{item.name} in {item.category}</p>
                         <p>By {item.seller}</p>
                         <p> PRICE : {item.price} only/-</p>
+                        <button onClick={()=>{
+                            console.log(item._id,"38");
+                            navigate(`/get/product/${item._id}`)
+                        }}>EDIT</button>
                     </div>
                 )
             })}
