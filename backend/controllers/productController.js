@@ -80,7 +80,7 @@ const deleteProducts = async (req, res) => {
     try {
         
         const ids = req.body;
-        console.log("Request Body:", req.body);
+        console.log("Request Body:", ids);
 
         // Check if ids is an array
         if (!Array.isArray(ids) || ids.length === 0) {
