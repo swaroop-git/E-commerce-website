@@ -6,6 +6,10 @@ function GetProducts() {
 
     const navigate = useNavigate()
     const [data, setData] = useState([]);
+    const [deleteData, setDeleteData] = useState([]);
+    const [refresh, setRefresh] = useState(false); // using refresh flag to refresh the page and jump to get products page keeping value as false by default.
+    console.log(deleteData, "deleteData");
+
     console.log(data, "8");
 
     useEffect(() => {
@@ -17,33 +21,63 @@ function GetProducts() {
             .catch(err => {
                 console.log(err);
             })
-    }, [])
-    return (
-        <div>
-           <h2>Products : </h2> 
+    }, [refresh])
 
-            {data && data.length>0 && data.map((item, index)=> {
-                return(
-                    <div style={{
-                        margin: '50px 30px',
-                        background: '#eee',
-                        width: '27%'
-                    }}>
-                        <img style={{
-                            width: '100%',
-                            height: '300px'
-                        }} src={item.url} alt="" />
-                        <p>{item.name} in {item.category}</p>
-                        <p>By {item.seller}</p>
-                        <p> PRICE : {item.price} only/-</p>
-                        <button onClick={()=>{
-                            console.log(item._id,"38");
-                            navigate(`/get/product/${item._id}`)
-                        }}>EDIT</button>
-                    </div>
-                )
-            })}
-        </div>
+
+    const handleDelete = () => {
+        const data = deleteData;
+        axios.post('http://localhost:3001/delete-products', data)
+        .then(res =>{
+            console.log(res.data, "30");
+            setDeleteData(res.data);
+            if(res.data.code == 200){
+                setRefresh(!refresh);
+            }
+           
+        })
+        .catch(err =>{
+            console.log(err, "30");
+        })
+    }
+
+    return (
+        <>
+            {deleteData.length > 0 && <button onClick={handleDelete}> DELETE SELECTED </button>}
+            <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                <h2>Products : </h2>
+
+                {data && data.length > 0 && data.map((item, index) => {
+                    return (
+                        <div style={{
+                            margin: '50px 30px',
+                            background: '#eee',
+                            width: '27%'
+                        }}>
+                            <img style={{
+                                width: '100%',
+                                height: '300px'
+                            }} src={item.url} alt="" />
+                            <p>{item.name} in {item.category}</p>
+                            <p>By {item.seller}</p>
+                            <p> PRICE : {item.price} only/-</p>
+                            <button onClick={() => {
+                                console.log(item._id, "38");
+                                navigate(`/get/product/${item._id}`)
+                            }}>EDIT</button>
+                            <input type="checkbox" onChange={(e) => {
+                                console.log(e.target.checked, "46");
+                                if (e.target.checked === true) {
+                                    setDeleteData([...deleteData, item._id])
+                                } else {
+                                    setDeleteData(deleteData.filter(s => s !== item._id))
+                                }
+                            }}></input>
+                        </div>
+                    )
+                })}
+            </div>
+        </>
+
     )
 }
 

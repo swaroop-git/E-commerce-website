@@ -1,3 +1,4 @@
+const { response } = require('express');
 const productModel = require('../models/productModel');
 
 // add product to data base
@@ -72,9 +73,40 @@ const getProductById = async (req, res) => {
     }
 }
 
+//delete product
+const deleteProducts = async (req, res) => {
+    
+
+    try {
+        
+        const ids = req.body;
+        console.log("Request Body:", req.body);
+
+        // Check if ids is an array
+        if (!Array.isArray(ids) || ids.length === 0) {
+            return res.status(400).send({ code: 400, message: 'No valid IDs provided' });
+        }
+
+        const response = await productModel.deleteMany({ _id: { $in: ids } });
+        if (response.deletedCount > 0) {
+            res.send({ code: 200, message: 'Successfully deleted products' });
+        } else {
+            res.status(404).send({ code: 404, message: 'No products found to delete' });
+        }
+    } catch (error) {
+        console.error("Server error:", error);
+        res.status(500).send({ code: 500, message: 'Internal server error' });
+    }
+   
+   
+
+    
+}
+
 module.exports = {
     addProduct,
     getProducts,
     editProduct,
-    getProductById
+    getProductById,
+    deleteProducts
 }

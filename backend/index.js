@@ -18,6 +18,7 @@ app.post('/add-product', productcontroller.addProduct);
 app.get('/get-products', productcontroller.getProducts);
 app.post('/edit-product', productcontroller.editProduct);
 app.get('/get-product/:id', productcontroller.getProductById);
+app.post('/delete-products', productcontroller.deleteProducts);
 
 app.listen(port,() => {
     console.log(`I am listening on port ${port}`);
