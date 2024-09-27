@@ -1,7 +1,8 @@
 const usersModels = require("../models/usersModels");
+const jwt = require('jsonwebtoken');
+
 
 const signUp = async (req,res) => {
-
 
     const name = req.body.name;
     const password = req.body.password;
@@ -41,7 +42,13 @@ const login = async (req,res)=>{
         if(isNameExists){
             console.log(isNameExists.password, "isNameExists"); 
             if(isNameExists.password === req.body.password) {
-                return res.send({code:200, message:"logged in successfully", token: "tokken"})
+                const token = jwt.sign({
+                    expAfter: Math.floor(Date.now() / 1000) + (60 * 60),
+                    name: isNameExists.name,
+                    password: isNameExists.password,
+                    type: isNameExists.type
+                }, 'MYKEY');
+                return res.send({code:200, message:"logged in successfully", token: token, userId: isNameExists._id})
             }else{
                 res.send({code: 404, message: "Incorrect password"})
             }
@@ -52,7 +59,36 @@ const login = async (req,res)=>{
 
 }
 
+const addToCart = async (req,res) => {
+
+    console.log(req.body, "62");
+    const isUpdate = await usersModels.updateOne({ _id: req.body.userId},{
+        $addToSet: { cart: req.body.productId }
+    })
+
+    if(isUpdate){
+        return res.send({code :200, message: 'Added to Cart'});
+    }else{
+        return res.send({ code: 500, message: 'Server Err'});
+    }
+
+}
+
+const getCart = async (req,res) =>{
+    const userId = req.body.userId;
+
+    const data = await usersModels.findOne({_id: userId}).populate('cart');
+    if(data){
+        return res.send({code :200, message: 'Get cart success', data: data});
+    }else{
+        return res.send({ code: 500, message: 'Server Err'});
+    }
+
+}
+
 module.exports = {
     signUp,
-    login
+    login,
+    addToCart,
+    getCart
 };

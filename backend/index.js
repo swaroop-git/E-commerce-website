@@ -23,6 +23,8 @@ app.post('/delete-products', productcontroller.deleteProducts);
 
 app.post('/SignUp', userController.signUp);
 app.post('/login', userController.login);
+app.post('/add-to-cart', userController.addToCart);
+app.post('/get-user-cart', userController.getCart);
 
 app.listen(port,() => {
     console.log(`I am listening on port ${port}`);

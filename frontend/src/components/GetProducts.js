@@ -8,9 +8,7 @@ function GetProducts() {
     const [data, setData] = useState([]);
     const [deleteData, setDeleteData] = useState([]);
     const [refresh, setRefresh] = useState(false); // using refresh flag to refresh the page and jump to get products page keeping value as false by default.
-    console.log(deleteData, "deleteData");
-
-    console.log(data, "8");
+    // console.log(deleteData, "deleteData");
 
     useEffect(() => {
         axios.get('http://localhost:3001/get-products')
@@ -32,17 +30,37 @@ function GetProducts() {
             setDeleteData(res.data);
             if(res.data.code == 200){
                 setRefresh(!refresh);
-            }
-           
+            }  
         })
         .catch(err =>{
             console.log(err, "30");
         })
     }
 
+    const handleAddToCart = (productId) => {
+        const _productId = productId;
+        const userId = localStorage.getItem('userId');
+
+        console.log({ productId: _productId, userId });
+
+        const data = { productId: _productId, userId }
+        axios.post('http://localhost:3001/add-to-cart', data)
+            .then(res => {
+                console.log(res.data, "52");
+                if (res.data.code == 200) {
+                    setRefresh(!refresh)
+                }
+
+            })
+            .catch(err => {
+                console.log(err, "30");
+
+            })
+    }
+
     return (
         <>
-            {deleteData.length > 0 && <button onClick={handleDelete}> DELETE SELECTED </button>}
+            {deleteData.length > 0 && <button onClick={ handleDelete }> DELETE SELECTED </button>}
             <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                 <h2>Products : </h2>
 
@@ -72,6 +90,9 @@ function GetProducts() {
                                     setDeleteData(deleteData.filter(s => s !== item._id))
                                 }
                             }}></input>
+                            <button onClick={() => {
+                                handleAddToCart(item._id)
+                            }}>ADD TO CART</button>
                         </div>
                     )
                 })}

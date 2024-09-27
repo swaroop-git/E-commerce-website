@@ -4,16 +4,17 @@ import { useNavigate } from "react-router-dom";
 function Home() {
     const navigate = useNavigate()
     const [data, setProduct] = useState([]);
+    const [refresh, setRefresh] = useState(false)
 
 
     useEffect(() => {
-        
+
         //navigate to login page if there is no token in localstorage
         if (!localStorage.getItem('token')) {
             navigate('/login');
             return;
         }
-        
+
         //fetching data from backend 
         axios.get('http://localhost:3001/get-products')
             .then(res => {
@@ -24,11 +25,28 @@ function Home() {
                 console.log(err);
             })
 
-        // //navigate to login page if there is no token in localstorage
-        // if (!localStorage.getItem('token')) {
-        //     navigate('/login');
-        // }
-    })
+    }, [refresh]);
+
+    const handleAddToCart = (productId) => {
+        const _productId = productId;
+        const userId = localStorage.getItem('userId');
+
+        console.log({ productId: _productId, userId });
+
+        const data = { productId: _productId, userId }
+        axios.post('http://localhost:3001/add-to-cart', data)
+            .then(res => {
+                console.log(res.data, "52");
+                if (res.data.code == 200) {
+                    setRefresh(!refresh)
+                }
+
+            })
+            .catch(err => {
+                console.log(err, "30");
+
+            })
+    }
 
     return (
         //on clicking logout button clearing out the token from localstorage and navigating to login page
@@ -60,6 +78,9 @@ function Home() {
                         <p>{item.name} in {item.category}</p>
                         <p>By {item.seller}</p>
                         <p> PRICE : {item.price} only/-</p>
+                        <button onClick={() => {
+                                handleAddToCart(item._id)
+                            }}>ADD TO CART</button>
                     </div>)
                 })}
             </div>
