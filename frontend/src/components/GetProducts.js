@@ -8,6 +8,7 @@ function GetProducts() {
     const [data, setData] = useState([]);
     const [deleteData, setDeleteData] = useState([]);
     const [refresh, setRefresh] = useState(false); // using refresh flag to refresh the page and jump to get products page keeping value as false by default.
+    const [productId, setProductId] = useState('');
     // console.log(deleteData, "deleteData");
 
     useEffect(() => {

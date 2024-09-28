@@ -17,7 +17,7 @@ function Login() {
         const data = { name: userName, password: password }
         axios.post('http://localhost:3001/login', data)
             .then((res) => {
-                console.log(res, 17)
+                console.log(res, "17")
                 if (res.data.token) {
                     localStorage.setItem('token', res.data.token);
                     localStorage.setItem('userId', res.data.userId);
@@ -25,7 +25,7 @@ function Login() {
                 }
             })
             .catch((err) => {
-                console.log(err, 20);
+                console.log(err, "28");
             })
     }
 

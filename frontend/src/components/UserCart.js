@@ -2,32 +2,34 @@ import axios from "axios";
 import {useEffect, useState} from "react"
 import { useNavigate } from "react-router-dom";
 
-function userCart() {
+function UserCart() {
 
     const navigate = useNavigate()
     const [data, setData] = useState([])
 
     useEffect(() => {
         const data = { userId: localStorage.getItem('userId') }
+        console.log(data, "12");
+
         axios.post('http://localhost:3001/get-user-cart', data)
-            .then((req, res) => {
-                console.log(res.data, "14");
-                setData(res.send({ code: 200, message: "get cart success" }))
+            .then(res => {
+                console.log(res.data.data.cart, "14");
+                setData(res.data.data.cart)
             }).catch(err => {
                 console.log(err);
             })
-    })
+    }, [])
 
     return (
         <div>
-        Home page
+        <h1> YOUR CART </h1>
         <button onClick= {()=> {
             localStorage.clear();
             navigate('/login');
         }}> Logout </button>  
 
 
-        <h1>PRODUCT LIST</h1>
+        <h2>PRODUCT LIST</h2>
 
         <div style= {{ display: 'flex', flexwrap: 'wrap', justifyContent:'space-between' }}>
 
@@ -55,4 +57,4 @@ function userCart() {
     )
 }
 
-export default userCart;
+export default UserCart;
