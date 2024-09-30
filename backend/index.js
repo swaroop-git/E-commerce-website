@@ -3,6 +3,7 @@ const cors = require('cors'); //CORS- Cross origin resource sharing, a way for w
 const bodyParser = require('body-parser')
 const productcontroller = require('./controllers/productController')
 const userController = require('./controllers/userController')
+const rolesController = require('./controllers/rolesController')
 const app = express();
 const port = 3001;
 
@@ -25,6 +26,10 @@ app.post('/SignUp', userController.signUp);
 app.post('/login', userController.login);
 app.post('/add-to-cart', userController.addToCart);
 app.post('/get-user-cart', userController.getCart);
+
+
+app.post('/add-role', rolesController.addRole);
+app.post('/delete-role', rolesController.deleteRole);
 
 app.listen(port,() => {
     console.log(`I am listening on port ${port}`);

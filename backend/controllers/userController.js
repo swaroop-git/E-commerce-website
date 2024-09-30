@@ -1,5 +1,6 @@
 const usersModels = require("../models/usersModels");
 const jwt = require('jsonwebtoken');
+const rolesmodel = require('../models/roleModel')
 
 
 const signUp = async (req,res) => {
@@ -7,13 +8,16 @@ const signUp = async (req,res) => {
     const name = req.body.name;
     const password = req.body.password;
     const url = req.body.url;
-    const type = req.body.type || 'USER';
+    const type = req.body.type;
+    const roles = [type];
+    
+
     if (!name) {
         return res.send({ code: 400, message: 'Name Required'})
     }else if(!password){
         return res.send({ code: 400, message: 'Password Required'})
     }else{
-        const newUser = await new usersModels({name, password, url, type})
+        const newUser = await new usersModels({name, password, url, type, roles})
         const savedUser = await newUser.save()
         if(savedUser){
             res.send({code: 200, message: 'Saved'})
@@ -38,8 +42,12 @@ const login = async (req,res)=>{
         return res.send({ code: 400, message: 'Password Required'})
     }else{
 
-        const isNameExists = await usersModels.findOne({name: name})
+        const isNameExists = await usersModels.findOne({name: name}).populate('roles');       
+
         if(isNameExists){
+            const roles = isNameExists.roles;
+            console.log(roles, "49");
+            
             console.log(isNameExists.password, "isNameExists"); 
             if(isNameExists.password === req.body.password) {
                 const token = jwt.sign({
@@ -48,7 +56,12 @@ const login = async (req,res)=>{
                     password: isNameExists.password,
                     type: isNameExists.type
                 }, 'MYKEY');
-                return res.send({code:200, message:"logged in successfully", token: token, userId: isNameExists._id})
+                return res.send({
+                    code:200, 
+                    message:"logged in successfully", 
+                    token: token, 
+                    user: isNameExists
+                })
             }else{
                 res.send({code: 404, message: "Incorrect password"})
             }
@@ -61,7 +74,6 @@ const login = async (req,res)=>{
 
 const addToCart = async (req,res) => {
 
-    console.log(req.body, "62");
     const isUpdate = await usersModels.updateOne({ _id: req.body.userId},{
         $addToSet: { cart: req.body.productId }
     })

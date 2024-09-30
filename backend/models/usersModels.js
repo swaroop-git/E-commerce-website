@@ -8,7 +8,8 @@ const userSchema = new Schema({
     name : String,
     type : String,
     password: String,
-    cart: [{type: Schema.Types.ObjectId, ref: 'products'}]
+    cart: [{type: Schema.Types.ObjectId, ref: 'products'}],
+    roles: [{type: String}]
 });
 
 

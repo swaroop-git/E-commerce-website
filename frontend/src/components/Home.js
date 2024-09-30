@@ -10,10 +10,10 @@ function Home() {
     useEffect(() => {
 
         //navigate to login page if there is no token in localstorage
-        if (!localStorage.getItem('token')) {
-            navigate('/login');
-            return;
-        }
+        // if (!localStorage.getItem('token')) {
+        //     navigate('/login');
+        //     return;
+        // }
 
         //fetching data from backend 
         axios.get('http://localhost:3001/get-products')
