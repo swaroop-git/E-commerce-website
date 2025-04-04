@@ -1,7 +1,7 @@
 const { response } = require('express');
 const productModel = require('../models/productModel');
 
-// add product to data base
+// add product to data base//
 const addProduct = async (req, res) => {
     try {
         const newProduct = new productModel(req.body);
